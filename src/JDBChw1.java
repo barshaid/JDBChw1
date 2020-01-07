@@ -105,7 +105,6 @@ public class JDBChw1 {
 	}
 
 	public static void quary(Statement stmt) throws SQLException {
-		// Scanner sc = new Scanner(System.in);
 		System.out.println("Enter query:");
 		String query = sc.nextLine();
 		ResultSet rs = null;
@@ -154,7 +153,6 @@ public class JDBChw1 {
 			String kw = sc2.nextLine();
 			ps = con.prepareStatement("SELECT TITLE FROM FILM WHERE FILM.TITLE LIKE '%" + kw + "%'");
 			rs = ps.executeQuery();
-			print(ps, rs); // function to print the result
 			break;
 
 		case 'b':
@@ -168,7 +166,6 @@ public class JDBChw1 {
 			ps.setObject(1, fname);
 			ps.setObject(2, lname);
 			rs = ps.executeQuery();
-			print(ps, rs);
 			break;
 
 		case 'c':
@@ -177,7 +174,6 @@ public class JDBChw1 {
 			ps = con.prepareStatement("SELECT TITLE FROM FILM WHERE RELEASE_YEAR=?");
 			ps.setObject(1, temp);
 			rs = ps.executeQuery();
-			print(ps, rs);
 			break;
 
 		case 'd':
@@ -187,23 +183,22 @@ public class JDBChw1 {
 					"SELECT TITLE FROM FILM , CATEGORY , FILM_CATEGORY WHERE CATEGORY.NAME=? AND CATEGORY.CATEGORY_ID=FILM_CATEGORY.CATEGORY_ID AND FILM_CATEGORY.FILM_ID=FILM.FILM_ID");
 			ps.setObject(1, temp);
 			rs = ps.executeQuery();
-			print(ps, rs);
 			break;
 
 		case 'e':
 			System.out.println("Enter number of actors");
 			int count = sc.nextInt();
 			ps = con.prepareStatement(
-					"SELECT TITLE FROM FILM WHERE FILM_ID IN (SELECT FILM_ID FROM FILM_ACTOR GROUP BY FILM_ID HAVING COUNT(ACTOR_ID)=?) ");
+					"SELECT TITLE FROM FILM WHERE FILM_ID IN (SELECT FILM_ID FROM FILM_ACTOR GROUP BY FILM_ID HAVING COUNT(ACTOR_ID)=?)");
 			ps.setObject(1, count);
 			rs = ps.executeQuery();
-			print(ps, rs);
 			break;
 
 		default:
 			System.out.println("Cancelling parameter query");
 			return;
 		}
+		print(ps, rs); // function to print the result
 
 	}
 }

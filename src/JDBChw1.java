@@ -1,8 +1,6 @@
 import java.sql.*;
 import java.util.Scanner;
 
-import com.mysql.cj.jdbc.exceptions.CommunicationsException;
-
 public class JDBChw1 {
 	static Scanner sc = new Scanner(System.in);
 	static Scanner sc2 = new Scanner(System.in);
@@ -24,7 +22,7 @@ public class JDBChw1 {
 		try {
 			con = DriverManager.getConnection(db, user, pw);
 			stmt = con.createStatement();
-		} catch (CommunicationsException e) {
+		} catch (SQLException e) {
 			System.out.println("Connection error \nterminating");
 			choice = 'd';
 		}
@@ -52,7 +50,7 @@ public class JDBChw1 {
 				break;
 
 			case 'd':
-				System.out.println("Exiting");
+				System.out.println("Shutting down");
 				stmt.close();
 				con.close();
 				sc.close();
@@ -68,16 +66,16 @@ public class JDBChw1 {
 
 	}
 
-	public static void print(PreparedStatement ps, ResultSet rs) throws SQLException {
+	public static void print(ResultSet rs) throws SQLException {
 		ResultSetMetaData metaData = rs.getMetaData();
 		int columnCount = metaData.getColumnCount();
 
-		int i = 1;
-		int j = 0;
+		int i = 1, j=0;
+		
 		while (rs.next()) {
 			i = 1;
 			while (i <= columnCount) {
-				System.out.print(rs.getString(i) + " ");
+				System.out.print(rs.getString(i) + " | ");
 				i++;
 			}
 			System.out.println("\n");
@@ -89,47 +87,44 @@ public class JDBChw1 {
 
 	public static void addActor(Statement stmt) throws SQLException {
 		String fname, lname;
-		// Scanner sc = new Scanner(System.in);
-		System.out.println("Enter first name:");
-		fname = sc.nextLine();
-		System.out.println("Enter last name:");
-		lname = sc.nextLine();
+		
+		do {
+			System.out.println("Enter first name:");
+			fname = sc2.nextLine();
+			if(fname.length() <= 0) {
+				System.out.println("This field cannot be empty\n");
+			}
+		} while (fname.length() <= 0);
+		
+		do {
+			System.out.println("Enter last name:");
+			lname = sc2.nextLine();
+			if(lname.length() <= 0) {
+				System.out.println("This field cannot be empty\n");
+			}
+		} while (lname.length() <= 0);
+		
 		try {
 			stmt.executeUpdate("INSERT INTO ACTOR(FIRST_NAME, LAST_NAME) VALUES(" + "\"" + fname + "\"" + "," + "\""
 					+ lname + "\"" + ");");
 			System.out.println("Entry successfuly added");
 		} catch (SQLException e) {
-			System.out.println("Error\nentry was not a");
+			System.out.println("Error\nentry not added");
 			return;
 		}
 	}
 
 	public static void quary(Statement stmt) throws SQLException {
 		System.out.println("Enter query:");
-		String query = sc.nextLine();
+		String query = sc2.nextLine();
 		ResultSet rs = null;
 		try {
 			rs = stmt.executeQuery(query);
+			print(rs);
 		} catch (SQLException e) {
 			System.out.println("Illegal query\nReturning to menu");
 			return;
 		}
-		ResultSetMetaData metaData = rs.getMetaData();
-		int columnCount = metaData.getColumnCount();
-		int i = 1, j = 0;
-
-		while (rs.next()) {
-			i = 1;
-			while (i <= columnCount) {
-				System.out.print(rs.getString(i) + " ");
-				i++;
-			}
-			System.out.println();
-			j++;
-		}
-		System.out.println("Query returned " + j + " entrie(s)");
-		rs.close();
-
 	}
 
 	public static void pQuary(Connection con) throws SQLException {
@@ -198,7 +193,6 @@ public class JDBChw1 {
 			System.out.println("Cancelling parameter query");
 			return;
 		}
-		print(ps, rs); // function to print the result
-
+		print(rs);
 	}
 }

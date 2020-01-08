@@ -170,7 +170,7 @@ public class JDBChw1 {
 
 		case 'c':
 			System.out.println("Enter release year:");
-			temp = sc.next();
+			temp = sc2.next();
 			ps = con.prepareStatement("SELECT TITLE FROM FILM WHERE RELEASE_YEAR=?");
 			ps.setObject(1, temp);
 			rs = ps.executeQuery();
@@ -178,7 +178,7 @@ public class JDBChw1 {
 
 		case 'd':
 			System.out.println("Enter category: ");
-			temp = sc.nextLine();
+			temp = sc2.nextLine();
 			ps = con.prepareStatement(
 					"SELECT TITLE FROM FILM , CATEGORY , FILM_CATEGORY WHERE CATEGORY.NAME=? AND CATEGORY.CATEGORY_ID=FILM_CATEGORY.CATEGORY_ID AND FILM_CATEGORY.FILM_ID=FILM.FILM_ID");
 			ps.setObject(1, temp);
@@ -187,7 +187,7 @@ public class JDBChw1 {
 
 		case 'e':
 			System.out.println("Enter number of actors");
-			int count = sc.nextInt();
+			int count = sc2.nextInt();
 			ps = con.prepareStatement(
 					"SELECT TITLE FROM FILM WHERE FILM_ID IN (SELECT FILM_ID FROM FILM_ACTOR GROUP BY FILM_ID HAVING COUNT(ACTOR_ID)=?)");
 			ps.setObject(1, count);

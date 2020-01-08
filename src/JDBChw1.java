@@ -62,8 +62,6 @@ public class JDBChw1 {
 			}
 			System.out.println();
 		}
-		sc.close();
-
 	}
 
 	public static void print(ResultSet rs) throws SQLException {

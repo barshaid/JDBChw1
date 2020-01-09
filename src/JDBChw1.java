@@ -1,3 +1,7 @@
+//Orit Herzog - 300410131, Daniel Barshai - 307833038
+
+package assig3_2;
+
 import java.sql.*;
 import java.util.Scanner;
 
@@ -13,20 +17,26 @@ public class JDBChw1 {
 		// required, depends on MySQL version
 		String db = "jdbc:mysql://localhost/sakila?useLegacyDatetimeCode=false&serverTimezone=UTC";
 		Class.forName("com.mysql.cj.jdbc.Driver");
+
 		System.out.println("Username:");
 		String user = sc.next();
+		
 		System.out.println("Password:");
 		String pw = sc.next();
+
 		Connection con = null;
 		Statement stmt = null;
-		try {
+
+		try {// Connection failure catch
 			con = DriverManager.getConnection(db, user, pw);
 			stmt = con.createStatement();
 		} catch (SQLException e) {
-			System.out.println("Connection error \nterminating");
+			System.out
+					.println("Connection error\nCheck login information and server status and try again \nTerminating");
 			choice = 'd';
 		}
 
+		// Main menu
 		while (choice != 'd') {
 			System.out.println("Please select from the menu:");
 			System.out.println("a. Add actor");
@@ -59,17 +69,18 @@ public class JDBChw1 {
 
 			default:
 				System.out.println("Not a menu option, please select again\n");
-			}
+			}// MENU END
 			System.out.println();
 		}
 	}
 
+	// Tuple print
 	public static void print(ResultSet rs) throws SQLException {
 		ResultSetMetaData metaData = rs.getMetaData();
 		int columnCount = metaData.getColumnCount();
 
-		int i = 1, j=0;
-		
+		int i = 1, j = 0;
+
 		while (rs.next()) {
 			i = 1;
 			while (i <= columnCount) {
@@ -85,24 +96,24 @@ public class JDBChw1 {
 
 	public static void addActor(Statement stmt) throws SQLException {
 		String fname, lname;
-		
+
 		do {
 			System.out.println("Enter first name:");
 			fname = sc2.nextLine();
-			if(fname.length() <= 0) {
+			if (fname.length() <= 0) {
 				System.out.println("This field cannot be empty\n");
 			}
 		} while (fname.length() <= 0);
-		
+
 		do {
 			System.out.println("Enter last name:");
 			lname = sc2.nextLine();
-			if(lname.length() <= 0) {
+			if (lname.length() <= 0) {
 				System.out.println("This field cannot be empty\n");
 			}
 		} while (lname.length() <= 0);
-		
-		try {
+
+		try {// Catch failure to add entry
 			stmt.executeUpdate("INSERT INTO ACTOR(FIRST_NAME, LAST_NAME) VALUES(" + "\"" + fname + "\"" + "," + "\""
 					+ lname + "\"" + ");");
 			System.out.println("Entry successfuly added");
@@ -116,7 +127,8 @@ public class JDBChw1 {
 		System.out.println("Enter query:");
 		String query = sc2.nextLine();
 		ResultSet rs = null;
-		try {
+
+		try {// Illegal query catch
 			rs = stmt.executeQuery(query);
 			print(rs);
 		} catch (SQLException e) {
@@ -129,6 +141,7 @@ public class JDBChw1 {
 		char choice;
 		ResultSet rs;
 		String temp;
+
 		System.out.println("Please select from the menu:");
 		System.out.println("a. Find movie by keyword in name");
 		System.out.println("b. Find movie by actor name");
@@ -139,6 +152,8 @@ public class JDBChw1 {
 
 		choice = sc.next().charAt(0);
 		PreparedStatement ps;
+
+		// pQuary menu
 		switch (choice) {
 
 		case 'a':
@@ -192,5 +207,5 @@ public class JDBChw1 {
 			return;
 		}
 		print(rs);
-	}
+	}// MENU END
 }
